@@ -74,10 +74,15 @@ public class Percolation {
     
   // is site (row i, column j) open?
   public boolean isOpen(int i, int j) {
-      if (mGrid[i-1][j-1] == true)
-          return true;
+      if (check_index(i,j)) {
+         if (mGrid[i-1][j-1] == true)
+             return true;
+         else
+             return false;
+      }
       else
           return false;
+     
   }
    // is site (row i, column j) full?
   public boolean isFull(int i, int j) {
@@ -103,7 +108,7 @@ public class Percolation {
         int i = row - 1;
         int j = col - 1;
         
-        if ((i < 0 && i >= mGridSize) || (j < 0 && j >= mGridSize))  {
+        if ((i < 0 || i >= mGridSize) || (j < 0 || j >= mGridSize))  {
             valid = false;
         }
         return valid;
