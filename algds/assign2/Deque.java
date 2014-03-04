@@ -121,8 +121,9 @@ public class Deque<Item> implements Iterable<Item> {
         if (isEmpty()) throw new NoSuchElementException("deque empty");
         Item item = back.item;        // save item to return
         back = back.previous;        // Previous node becomes backmost node
-        back.next = null;
+        if (back != null) back.next = null;
         N--;
+        if (N == 0 ) { front = back = null; }
         assert check();
         return item;                   // return the saved item
     }
