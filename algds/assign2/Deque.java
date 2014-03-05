@@ -14,10 +14,10 @@ import java.util.NoSuchElementException;
 
 
 /**
- *  The <tt>Deque</tt> A double-ended queue or deque (pronounced "deck") is a generalization of a stack and a queue
- * that supports inserting and removing items from either the front or the back of the data structure
- *  
- *
+ *  The <tt>Deque</tt> A double-ended queue or deque (pronounced "deck") 
+ * is a generalization of a stack and a queue that 
+ * supports inserting and removing items from 
+ * either the front or the back of the data structure
  *  @author Ravi Shankar
  *  
  */
@@ -108,6 +108,11 @@ public class Deque<Item> implements Iterable<Item> {
         Item item = front.item;        // save item to return
         front = front.next;            // delete first node
         N--;
+        
+        if (N == 0) { 
+            front = null; 
+            back = null; 
+        }
         assert check();
         return item;                   // return the saved item
     }
@@ -121,17 +126,24 @@ public class Deque<Item> implements Iterable<Item> {
         if (isEmpty()) throw new NoSuchElementException("deque empty");
         Item item = back.item;        // save item to return
         back = back.previous;        // Previous node becomes backmost node
-        if (back != null) back.next = null;
+        if (back != null) {
+            back.next = null;
+        }
         N--;
-        if (N == 0 ) { front = back = null; }
+        if (N == 0) { 
+            front = null;  
+            back = null; 
+        }
         assert check();
         return item;                   // return the saved item
     }
     
        
     /**
-     * Returns an iterator to this deque that iterates through the items in front to last
-     * @return an iterator to this stack that iterates through the items from front to back
+     * Returns an iterator to this deque that iterates through the items 
+     * in front to last
+     * @return an iterator to this stack that iterates through the items 
+     * from front to back
      */
      public Iterator<Item> iterator()  { return new ListIterator();  }
 
@@ -159,7 +171,7 @@ public class Deque<Item> implements Iterable<Item> {
         else if (N == 1) {
             //StdOut.println("When N is 1:"+ N);
             if (front == null || back == null)      { 
-                StdOut.println("front or back is null");
+                //StdOut.println("front or back is null");
                 return false; 
             }
             if (front.next != null || back.next != null) {
@@ -188,15 +200,37 @@ public class Deque<Item> implements Iterable<Item> {
         Deque<Integer> dq = new Deque<Integer>();
         
         int N = Integer.parseInt(args[0]);
+        
+        // Test case 1
         for (int i = 1; i <= N; i++) {
             dq.addFirst(i);
             
         }
+        
+        // Test iterator for testcase 1
+        for (Number item: dq) 
+            StdOut.print(item + " ");
+        StdOut.println();
+        
         for (int i = 1; i <= N; i++) {
             StdOut.print(dq.removeLast());
         }
         StdOut.println();
         
+        // Test case 2
+        for (int i = 1; i <= N; i++) {
+            dq.addLast(i);
+            
+        }
+        // Test iterator for testcase 2
+        for (Number item: dq) 
+            StdOut.print(item + " ");
+        StdOut.println();
+        
+        for (int i = 1; i <= N; i++) {
+            StdOut.print(dq.removeFirst());
+        }
+        StdOut.println();
         
     }
 }
