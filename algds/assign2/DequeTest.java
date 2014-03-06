@@ -85,5 +85,40 @@ public class DequeTest extends TestCase {
         
         
     }
+    
+    /**
+     *  Test case 5 - check if you can create more than one iterator at the same time
+     * 
+     */
 
+    public void testIterator() {
+        Deque<Integer> dq = new Deque<Integer>();
+        for (int i = 1; i <= 10; i++) {
+            dq.addFirst(i);
+        }
+        // Test iterator
+        for (Number i: dq) {
+            StdOut.print(i + ":");
+            for (Number j: dq) 
+                StdOut.print(j + ",");
+            StdOut.println();
+        }   
+            
+    }
+    
+    /**
+     *  Test case 6 - check for nullpointer exception for 
+     * items that are null added to deque
+     */
+    
+    public void testAddItemNull() {
+        Deque<Integer> dq = new Deque<Integer>();
+        
+        
+        // Try to add null item to an empty deque
+            dq.addFirst(null);
+            fail ("This is incorrect. Cannot add null item to  deque");
+            dq.addLast(null);
+            fail ("This is incorrect. Cannot remove from an empty deque");
+    }
 }
