@@ -26,7 +26,7 @@ import java.util.NoSuchElementException;
  *
  *  @author Ravi Shankar
  */
-public class RandomizeQueue<Item> implements Iterable<Item> {
+public class RandomizedQueue<Item> implements Iterable<Item> {
     private Item[] q;            // queue elements
     private int N = 0;           // number of elements on queue
     private int first = 0;       // index of first element of queue
@@ -36,7 +36,7 @@ public class RandomizeQueue<Item> implements Iterable<Item> {
     /**
      * Initializes an empty queue.
      */
-    public RandomizeQueue() {
+    public RandomizedQueue() {
         // cast needed since no generic array creation in Java
         q = (Item[]) new Object[2];
     }
@@ -83,12 +83,17 @@ public class RandomizeQueue<Item> implements Iterable<Item> {
         
         int idx = randomIndex();
         
-        if (q[idx] != null) { 
-            Item item = q[idx]; 
-            q[idx] = null; // to avoid loitering
-             N--;
-             if (idx == first) { first++; } 
-        }
+        
+        // Swap random element at idx with first
+        Item swap = q[first];
+        q[first] = q[idx];
+        q[idx]= swap;
+        
+       // Deque the random element, now in index pointed by first
+        Item item = q[first]; 
+        q[first] = null; // to avoid loitering
+        N--;
+        first++;
         
         
         if (first == q.length) first = 0;           // wrap-around
@@ -103,9 +108,6 @@ public class RandomizeQueue<Item> implements Iterable<Item> {
     public Item sample() {
          if (isEmpty()) throw new NoSuchElementException("Queue underflow");
          int idx = randomIndex();
-         while (q[idx] != null) {
-             idx = randomIndex();
-         }
          return q[idx];
     }
         
@@ -136,12 +138,10 @@ public class RandomizeQueue<Item> implements Iterable<Item> {
     private void resize(int max) {
         assert max >= N;
         Item[] temp = (Item[]) new Object[max];
-        // Like resizing queue, but take care of nulls that are interstitial
+        
         int size = N;
         for (int i = 0; i < size; i++) {
-            if (q[first + i] != null) {
-               temp[i] = q[(first + i) % q.length];
-            }
+          temp[i] = q[(first + i) % q.length];
         }
         q = temp;
         first = 0;
@@ -153,17 +153,16 @@ public class RandomizeQueue<Item> implements Iterable<Item> {
      * 
      */
     private int randomIndex() {
-        / Using the uniform random generator API, get a random index
-        int idx = StdRandom(q.length + 1); /* Note that N is the number of 
-                                            elements and should not be used
-                                            for index */
+        // Using the uniform random generator API, get a random index
+        int idx = StdRandom.uniform(first,(first + (N - 1)) % q.length); 
+                                            
         return idx;
     }
    /**
      * Unit tests the <tt>RandomizeQueue</tt> data type.
      */
     public static void main(String[] args) {
-        RandomizeQueue<String> q = new RandomizeQueue<String>();
+        RandomizedQueue<String> q = new RandomizedQueue<String>();
         while (!StdIn.isEmpty()) {
             String item = StdIn.readString();
             if (!item.equals("-")) q.enqueue(item);
