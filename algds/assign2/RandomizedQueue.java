@@ -19,7 +19,8 @@ import java.util.NoSuchElementException;
  *  <p>
  *  This implementation uses a resizing array, which double the underlying array
  *  when it is full and halves the underlying array when it is one-quarter full.
- *  The <em>enqueue</em> and <em>dequeue</em> operations take constant amortized time.
+ *  The <em>enqueue</em> and <em>dequeue</em> operations take constant 
+ *  amortized time.
  *  The <em>size</em>, <em>peek</em>, and <em>is-empty</em> operations takes
  *  constant time in the worst case. 
  *  
@@ -87,7 +88,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         // Swap random element at idx with first
         Item swap = q[first];
         q[first] = q[idx];
-        q[idx]= swap;
+        q[idx] = swap;
         
        // Deque the random element, now in index pointed by first
         Item item = q[first]; 
@@ -128,7 +129,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         public Item next() {
             if (!hasNext()) throw new NoSuchElementException();
-            Item item = q[(i + first) % q.length];
+            //Item item = q[(i + first) % q.length];
+            Item item = sample();
             i++;
             return item;
         }
@@ -154,21 +156,21 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      */
     private int randomIndex() {
         // Using the uniform random generator API, get a random index
-        int idx = StdRandom.uniform(first,(first + (N - 1)) % q.length); 
-                                            
+        if (N == 1) { return 0; }
+            
+        int idx = StdRandom.uniform(first, (first + (N - 1)) % q.length); 
+                                              
         return idx;
     }
    /**
      * Unit tests the <tt>RandomizeQueue</tt> data type.
      */
     public static void main(String[] args) {
-        RandomizedQueue<String> q = new RandomizedQueue<String>();
-        while (!StdIn.isEmpty()) {
-            String item = StdIn.readString();
-            if (!item.equals("-")) q.enqueue(item);
-            else if (!q.isEmpty()) StdOut.print(q.dequeue() + " ");
-        }
-        StdOut.println("(" + q.size() + " left on queue)");
+        
+        RandomizedQueue<Integer> q = new RandomizedQueue<Integer>();
+        q.enqueue(1);
+        StdOut.println(q.dequeue());
+        
     }
 
 }
