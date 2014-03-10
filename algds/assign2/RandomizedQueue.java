@@ -114,8 +114,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         
 
     /**
-     * Returns an iterator that iterates over the items in this queue in FIFO order.
-     * @return an iterator that iterates over the items in this queue in FIFO order
+     * Returns an iterator that iterates over the items 
+     * in this queue in random order.
+     * @return an iterator that iterates over the items
+     * in this queue in random order
      */
     public Iterator<Item> iterator() {
         return new ArrayIterator();
@@ -124,13 +126,27 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // an iterator, doesn't implement remove() since it's optional
     private class ArrayIterator implements Iterator<Item> {
         private int i = 0;
+        private RandomizedQueue<Item> iterq;
+        /**
+         * The constructor copies the deque into its own copy
+         */
+        public ArrayIterator() {
+            iterq = new RandomizedQueue<Item>();
+            int size = N;
+            iterq.resize(size);
+            for (int j = 0; j < size; j++) {
+                iterq.q[j] = q[(first + j) % q.length];
+
+            }
+            iterq.N = size;
+        }
         public boolean hasNext()  { return i < N;                               }
         public void remove()      { throw new UnsupportedOperationException();  }
 
         public Item next() {
             if (!hasNext()) throw new NoSuchElementException();
             //Item item = q[(i + first) % q.length];
-            Item item = sample();
+            Item item = iterq.dequeue();
             i++;
             return item;
         }
@@ -167,10 +183,27 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      */
     public static void main(String[] args) {
         
-        RandomizedQueue<Integer> q = new RandomizedQueue<Integer>();
-        q.enqueue(1);
-        StdOut.println(q.dequeue());
+        RandomizedQueue<Integer> queue = new RandomizedQueue<Integer>();
         
-    }
+        for (int i = 0; i <= 10; i++) {
+            queue.enqueue(i);
+        }
+        // Check Iterator 
+        for (Number item: queue) {
+            StdOut.print(item + " ");
+        }
+        StdOut.println();
+    
 
+    // Check if iterator can be mutually nested
+    for (Number item1: queue) {
+        StdOut.println(item1);
+        StdOut.println("----");
+        for (Number item2: queue) {
+            StdOut.print(item2 + " ");
+        }
+        StdOut.println();
+    }
+  } 
 }
+
