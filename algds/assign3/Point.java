@@ -15,7 +15,34 @@ import java.util.Comparator;
 public class Point implements Comparable<Point> {
 
     // compare points by slope
-    public final Comparator<Point> SLOPE_ORDER;       // YOUR DEFINITION HERE
+    // YOUR DEFINITION HERE
+    public final Comparator<Point> SLOPE_ORDER = new Comparator<Point>() {
+        
+        public int compare(Point p1, Point p2) {
+            // Compare this with p1
+            Point p = new Point(x,y);
+            double slope_p1 = p.slopeTo(p1);
+            double slope_p2 = p.slopeTo(p2);
+            
+            int val = 0;
+            
+            if (slope_p1 == slope_p2) { return val; }
+            if (slope_p1 < slope_p2) { 
+                val = -1; 
+            }
+            else { 
+                val = 1; 
+            }
+            return val;
+        }
+        
+        public boolean equals(Object o) {
+            //if (o instanceof Point) {
+            Point p = (Point) o;
+            return this.equals(p);
+            //}               
+        }
+    } ;       
 
     private final int x;                              // x coordinate
     private final int y;                              // y coordinate
@@ -71,7 +98,16 @@ public class Point implements Comparable<Point> {
     // is this point lexicographically smaller than that one?
     // comparing y-coordinates and breaking ties by x-coordinates
     public int compareTo(Point that) {
-        /* YOUR CODE HERE */
+        if (this.equals(that)) {
+            return 0;
+        }
+        else {
+            if ((y - that.y) < 0 || (x - that.x) < 0)
+                return -1;
+            else
+                return 1;
+        }
+
     }
 
     // return string representation of this point
