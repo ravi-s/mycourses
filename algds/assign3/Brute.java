@@ -54,13 +54,13 @@ public class Brute {
                b = 
                  slope == arrayOfPoints[i].slopeTo(arrayOfPoints[k]);
                b = b && (slope == arrayOfPoints[i].slopeTo(arrayOfPoints[l]));
-              // Slopes match?     draw the slopes                                      
+              // if match                                  
               if (b) {
                    String s = 
-                       arrayOfPoints[i] + " -> " + 
-                       arrayOfPoints[j] + " -> " +
-                       arrayOfPoints[k] + " -> " +
-                       arrayOfPoints[l];
+                       arrayOfPoints[i] + " -> " 
+                       + arrayOfPoints[j] + " -> " 
+                       + arrayOfPoints[k] + " -> " 
+                       + arrayOfPoints[l];
                    StdOut.println(s);
                    arrayOfPoints[i].drawTo(arrayOfPoints[j]);
                    arrayOfPoints[j].drawTo(arrayOfPoints[k]);
