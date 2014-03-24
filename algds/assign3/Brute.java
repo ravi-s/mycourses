@@ -9,6 +9,7 @@
  *  standard drawing.
  *
  *************************************************************************/
+import java.util.Arrays;
 
 public class Brute {
     private static int points; // Stores the number of points
@@ -43,6 +44,7 @@ public class Brute {
         
         readInput(args[0]);
         
+        Arrays.sort(arrayOfPoints);
         
         /* Brute Force algorithm to check if 4 points at any time are collinear */
         for (int i = 0; i < points; i++) {
