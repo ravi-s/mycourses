@@ -17,6 +17,7 @@ public class Point implements Comparable<Point> {
     // compare points by slope
     // YOUR DEFINITION HERE
     public final Comparator<Point> SLOPE_ORDER = new Comparator<Point>() {
+    public  final Comparator<Point> SLOPE_ORDER = new Comparator<Point>() {
         public int compare(Point p1, Point p2) {
             // Compare this with p1
             Point p = new Point(x, y);
