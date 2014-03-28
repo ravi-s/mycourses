@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class Fast {
     private static int points; // Stores the number of points
-    private static Point[] ArrayOfPoints;
+    private static Point[] pointsArray;
     
     
     /**
@@ -26,19 +26,36 @@ public class Fast {
        
         In in = new In(filename);
         points = in.readInt();
-        ArrayOfPoints = new Point[points];
+        pointsArray = new Point[points];
 
         
         for (int i = 0; i < points; i++) {
             int x = in.readInt();
             int y = in.readInt();
             Point p = new Point(x, y);
-            ArrayOfPoints[i] = p;
+            pointsArray[i] = p;
             p.draw();
         }
     }
     
+    /**
+     *  Method to create an array copy except the one mentioned as index
+     * for the source array
+     * 
+     */
     
+    private static Point[] copyArray(final Point[] a, int index) {
+        
+        int len = a.length - 1;
+        Point[] ptarray = new Point[len];
+        int j = 0;
+        for (int i = 0; i < a.length; i++) {
+            if ( i == index) continue;
+            ptarray[j++] = a[i];
+        }
+        
+        return ptarray;
+    }
     
     public static void main(String[] args) {
 
@@ -53,75 +70,82 @@ public class Fast {
         readInput(args[0]);
         
          // Sort the Points array
-         Arrays.sort(ArrayOfPoints);
-        for (Point p: ArrayOfPoints) 
-            StdOut.println(p);
+         Arrays.sort(pointsArray);
+        
+//        for (Point p: pointsArray) 
+//            StdOut.println(p);
+         
         // Faster algorithm that calculates slope
         // for each point against each other point, sorts them
         // any 3 or more equal slope makes it collinear for each point
-         if ( points >= 4) {
-             for (int i = 0; (points-1) - i >= 4; i++) {
-            // Sort the array of points by its comparator
-            Point[]  p = Arrays.copyOfRange(ArrayOfPoints,i,points);
+         if (points >= 4) {
+             
+           for (int i = 0; i < points; i++) {
+
+            Point[]  p = copyArray(pointsArray, i);
             //StdOut.println("Size of p: " + p.length);
-            StdOut.println("Before sorting");
-            for (Point pti: p) 
-                     StdOut.println(pti);
+//            StdOut.println("Before sorting");
+//            for (Point pti: pointsArray) 
+//                     StdOut.println(pti);
             
-            Arrays.sort(p,ArrayOfPoints[i].SLOPE_ORDER);
-            StdOut.println("After sorting");
-            for (Point pti2: p) 
-                     StdOut.println(pti2);
+            Arrays.sort(p, pointsArray[i].SLOPE_ORDER);
+//            StdOut.println("After sorting");
+//            for (Point pti2: pointsArray) 
+//                     StdOut.println(pti2);
+            
             
             
             // Check if there are 3 or more form same 
             // slope with the point designated by i
-            double current_slope, slope ;
+            double currentSlope, slope;
             int match = 0;
             List<Point> l = new ArrayList<Point>();
             
-            slope = p[0].slopeTo(p[0]);
+            // Start with first point and keep checking until end of sorted array
+            slope = pointsArray[i].slopeTo(p[0]);
            
-            // StdOut.println("slope: " + current_slope);
+            // StdOut.println("slope: " + currentSlope);
             
-            l.add(p[0]);
-            for ( int j = 1; j < p.length; j++) {
-                
-                current_slope = p[0].slopeTo(p[j]);
-                if (slope == current_slope) { 
+            l.add(pointsArray[i]);
+
+            for (int j =  1; j < p.length; j++) {
+                currentSlope = pointsArray[i].slopeTo(p[j]);
+                if (slope == currentSlope) { 
                     match++; 
                     l.add(p[j]);
                 }
                 else {
-                  slope = current_slope; 
-                    // clear the list
-                  l.clear();
-                  match = 0;
-                  l.add(p[0]);
-                 }
-            }
-            // We found a collinear set of points
-            if (match >= 3) {
-                StringBuffer s = new StringBuffer();
-                Point nextPoint = null;
-                Point currentPoint = l.get(0);
-                
-                s.append(currentPoint + " -> ");
-                int count = 0;
-                for (Point pt : l) {
-                    count++;
-                    nextPoint = pt;
-                    if (currentPoint == nextPoint) continue;
-                    s.append(nextPoint); 
-                    if (count < l.size()) s.append(" -> "); 
-                    currentPoint.drawTo(nextPoint);
-                    currentPoint = nextPoint;
+                    if (match < 3) {
+                        slope = currentSlope; 
+                        // clear the list
+                        l.clear();
+                        match = 0;
+                        l.add(pointsArray[i]);
+
+                    }
                 }
-                
-                StdOut.println(s.toString());
             }
-            
-         }
+            if (match >= 3) {
+               StringBuffer s = new StringBuffer();
+               Point nextPoint = null;
+               Point currentPoint = l.get(0);
+               s.append(currentPoint + " -> ");
+               int count = 0;
+               for (Point pt : l) {
+                   count++;
+                   nextPoint = pt;
+                   if (currentPoint == nextPoint) continue;
+                   s.append(nextPoint); 
+                   if (count < l.size()) s.append(" -> "); 
+                   currentPoint.drawTo(nextPoint);
+                   currentPoint = nextPoint;
+               }
+               
+               StdOut.println(s.toString());
+           }
+            if (points == 4) break;
+        }
+           
       }
         // display to screen all at once
         StdDraw.show(0);
