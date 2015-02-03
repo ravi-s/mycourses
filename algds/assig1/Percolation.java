@@ -1,3 +1,8 @@
+/**
+ * Name: Percolation class abstraction
+ * Author: Ravi S
+ * Date: 2-February-2015
+ */
 
 public class Percolation {
     private int mGridSize; 
@@ -9,6 +14,8 @@ public class Percolation {
  */
     public Percolation(int N) {
        
+       if (N <= 0) 
+           throw new IllegalArgumentException("Size N cannot be 0 or less than 0");
        // Create the grid and store the grid size
        mGridSize = N;
        mGrid = new boolean[N][N];
@@ -21,7 +28,7 @@ public class Percolation {
     
        // Initialize the WeightedQuickUnionFind
        // 2 for extra virtual nodes - one at the top 
-       // and one at the bottom (index 0 and index N^2 -1)
+       // and one at the bottom (index 0 and index N^2 -1 respectively)
        mUnionFind = new WeightedQuickUnionUF(N*N + 2);
     }
     
@@ -30,42 +37,41 @@ public class Percolation {
   */
     public void open(int i, int j) {
         if (!checkIndex(i, j))
-           throw new IndexOutOfBoundsException("invalid index i or j for grid site");
-       if (isOpen(i, j)) return;
-       else {
-              mGrid[i-1][j-1] = true;
-              
-
-              // 1: top row
-              if (i == 1) {
-                     int idx = xyTo1D(i, j);
-                     mUnionFind.union(0, idx);
-                     
-              }
-              // 2: bottom row
-              if (i == mGridSize) {
-                  int idx = xyTo1D(i, j);
-                  mUnionFind.union(mGridSize*mGridSize-1, idx);
-              }
-              
-              // 3: other cases
-              int idxFrom = xyTo1D(i, j);
-              
-              if (checkIndex(i-1, j)) {
-                  if (isOpen(i-1, j)) mUnionFind.union(idxFrom, xyTo1D(i-1, j));
-              }
-              if (checkIndex(i+1, j)) {
-                  if (isOpen(i+1, j)) mUnionFind.union(idxFrom, xyTo1D(i+1, j));
-              }
-              if (checkIndex(i, j+1)) {
-                  if (isOpen(i, j+1)) mUnionFind.union(idxFrom, xyTo1D(i, j+1));
-              }
-              if (checkIndex(i, j-1)) {
-                  if (isOpen(i, j-1)) mUnionFind.union(idxFrom, xyTo1D(i, j-1));
-              }
-              
-       } 
-       
+        throw new IndexOutOfBoundsException("invalid index i or j for grid site");
+        
+        if (isOpen(i, j)) return;
+        
+        mGrid[i-1][j-1] = true;
+        
+        // Neither Topmost or bottom most rows
+        
+        int idxFrom = xyTo1D(i, j);
+        
+        if (checkIndex(i-1, j)) {
+            if (isOpen(i-1, j)) mUnionFind.union(idxFrom, xyTo1D(i-1, j));
+        }
+        if (checkIndex(i+1, j)) {
+            if (isOpen(i+1, j)) mUnionFind.union(idxFrom, xyTo1D(i+1, j));
+        }
+        if (checkIndex(i, j+1)) {
+            if (isOpen(i, j+1)) mUnionFind.union(idxFrom, xyTo1D(i, j+1));
+        }
+        if (checkIndex(i, j-1)) {
+            if (isOpen(i, j-1)) mUnionFind.union(idxFrom, xyTo1D(i, j-1));
+        }
+        // 1: top row
+        if (i == 1) {
+            int idx = xyTo1D(i, j);
+            mUnionFind.union(0, idx);
+            
+        }
+        // 2: bottom row
+        if (i == mGridSize) {
+            int idx = xyTo1D(i, j);
+             mUnionFind.union(idx, mGridSize*mGridSize+1);
+        }
+        
+        
      } 
   
     
@@ -76,9 +82,7 @@ public class Percolation {
          if (mGrid[i-1][j-1])
              return true;
       }
-      
-          return false;
-     
+      return false;
   }
    // is site (row i, column j) full?
   public boolean isFull(int i, int j) {
@@ -86,7 +90,7 @@ public class Percolation {
           throw new IndexOutOfBoundsException("invalid index i or j for grid site");
       int idx = xyTo1D(i, j);
       // is virtual top site connected to this site
-       return mUnionFind.connected(idx, 0);
+       return mUnionFind.connected(0, idx);
            
   }
    
@@ -94,7 +98,7 @@ public class Percolation {
    public boolean percolates() {
        if (mGridSize == 1 && !isOpen(1, 1))
           return false;
-       return mUnionFind.connected(0,mGridSize*mGridSize-1);
+       return mUnionFind.connected(0, mGridSize*mGridSize+1);
        
    }
     
