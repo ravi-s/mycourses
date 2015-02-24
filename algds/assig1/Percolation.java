@@ -28,7 +28,7 @@ public class Percolation {
     
        // Initialize the WeightedQuickUnionFind
        // 2 for extra virtual nodes - one at the top 
-       // and one at the bottom (index 0 and index N^2 -1 respectively)
+       // and one at the bottom (index 0 and index N^2 + 1 respectively)
        mUnionFind = new WeightedQuickUnionUF(N*N + 2);
     }
     
@@ -50,7 +50,7 @@ public class Percolation {
         if (checkIndex(i-1, j)) {
             if (isOpen(i-1, j)) mUnionFind.union(idxFrom, xyTo1D(i-1, j));
         }
-        if (checkIndex(i+1, j)) {
+        if (checkIndex(i+1, j) && (i != mGridSize)) {
             if (isOpen(i+1, j)) mUnionFind.union(idxFrom, xyTo1D(i+1, j));
         }
         if (checkIndex(i, j+1)) {
@@ -66,7 +66,7 @@ public class Percolation {
             
         }
         // 2: bottom row
-        if (i == mGridSize) {
+        if (i == mGridSize && (!percolates())) {
             int idx = xyTo1D(i, j);
              mUnionFind.union(idx, mGridSize*mGridSize+1);
         }
@@ -78,10 +78,10 @@ public class Percolation {
     
   // is site (row i, column j) open?
   public boolean isOpen(int i, int j) {
-      if (checkIndex(i, j)) {
-         if (mGrid[i-1][j-1])
-             return true;
-      }
+      if (!checkIndex(i, j))
+          throw new IndexOutOfBoundsException("invalid index i or j for grid site");
+      if (mGrid[i-1][j-1])
+          return true;
       return false;
   }
    // is site (row i, column j) full?
