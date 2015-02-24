@@ -22,11 +22,11 @@ public class Brute {
         points = in.readInt();
         arrayOfPoints = new Point[points];
         
-        for (int i = 0; i < points; i++) {
+        for (int i = 1; i <= points; i++) {
             int x = in.readInt();
             int y = in.readInt();
             Point p = new Point(x, y);
-            arrayOfPoints[i] = p;
+            arrayOfPoints[i-1] = p;
             p.draw();
         }
     }
@@ -38,42 +38,43 @@ public class Brute {
         StdDraw.setYscale(0, 32768);
         StdDraw.show(0);
         StdDraw.setPenColor();
-        StdDraw.setPenRadius(.005);
+        StdDraw.setPenRadius(.003);
 
-        long start = System.currentTimeMillis();
+        //long start = System.currentTimeMillis();
         
         readInput(args[0]);
         
         Arrays.sort(arrayOfPoints);
         
         /* Brute Force algorithm to check if 4 points at any time are collinear */
-        for (int i = 0; i < points; i++) {
+        for (int i = 1; i <= points; i++) {
           boolean b = false; // state of slope match for 4 points
-          for (int j = i + 1; j < points; j++)
-            for (int k = j + 1; k < points; k++)
-              for (int l = k + 1; l < points; l++) {
-                double slope = arrayOfPoints[i].slopeTo(arrayOfPoints[j]);
+          for (int j = i + 1; j <= points; j++)
+            for (int k = j + 1; k <= points; k++)
+              for (int l = k + 1; l <=  points; l++) {
+                double slope = arrayOfPoints[i-1].slopeTo(arrayOfPoints[j-1]);
                b = 
-                 slope == arrayOfPoints[i].slopeTo(arrayOfPoints[k]);
-               b = b && (slope == arrayOfPoints[i].slopeTo(arrayOfPoints[l]));
+                 slope == arrayOfPoints[i-1].slopeTo(arrayOfPoints[k-1]);
+               b = b && (slope == arrayOfPoints[i-1].slopeTo(arrayOfPoints[l-1]));
               // if match                                  
               if (b) {
                    String s = 
-                       arrayOfPoints[i] + " -> " 
-                       + arrayOfPoints[j] + " -> " 
-                       + arrayOfPoints[k] + " -> " 
-                       + arrayOfPoints[l];
+                       arrayOfPoints[i-1] + " -> " 
+                       + arrayOfPoints[j-1] + " -> " 
+                       + arrayOfPoints[k-1] + " -> " 
+                       + arrayOfPoints[l-1];
                    StdOut.println(s);
-                   arrayOfPoints[i].drawTo(arrayOfPoints[j]);
-                   arrayOfPoints[j].drawTo(arrayOfPoints[k]);
-                   arrayOfPoints[k].drawTo(arrayOfPoints[l]);
+                   arrayOfPoints[i-1].drawTo(arrayOfPoints[j-1]);
+                   arrayOfPoints[j-1].drawTo(arrayOfPoints[k-1]);
+                   arrayOfPoints[k-1].drawTo(arrayOfPoints[l-1]);
                }
             
             }
         }   
-        long end = System.currentTimeMillis();
+
+        //long end = System.currentTimeMillis();
         
-        StdOut.println("Total Time(s): " + (end - start)/1000);
+        //StdOut.println("Total Time(s): " + (end - start)/1000);
         // display to screen all at once
         StdDraw.show(0);
     }
