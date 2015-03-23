@@ -15,31 +15,66 @@
 public class Solver {
     private boolean solvable;
     private int moves;
+    // Keep a Min-oriented priority queue for board and its twin
+    // for A* algorithm search
+    
     private Queue<Board> queue = new Queue<Board>();
     
     // Inner class for search node
     private static class Node implements Comparable<Node> {
         private Board board;
-        //int moves;
+        private int moves;
         private int priority;
         
         Node(Board b, int m) { 
             board = b;
-            //moves = m;
-            priority = b.manhattan() + m;
+            moves = m;
+            priority = b.manhattan() + moves;
         }
         Board getBoard() { return board; }
         int getPriority() { return priority; }
+        int getMoves() { return moves; }
         
-        public int compareTo(Node b) {
-            if (board.equals(b.board)) return 0;
-            else {
-                if (priority < b.priority) return -1;
-                else return 1;
+//        public int compareTo(Node b) {
+//            int value = 1;
+////            StdOut.println("this manhattan" + getBoard().manhattan());
+////            StdOut.println("this priority" + getPriority());
+////            StdOut.println("this:\n" + this.getBoard());
+////            
+////            
+////            StdOut.println("b manhattan: " + b.getBoard().manhattan());
+////            StdOut.println("b priority" + b.getPriority());
+////            StdOut.println("b:\n" + b.getBoard());
+//            if (getPriority() < b.getPriority()) {
+//                if (getBoard().manhattan() < b.getBoard().manhattan())
+//                    value = -1;
+//                
+//            }
+//            
+//            if (getPriority() == b.getPriority()) {
+//                if (getBoard().manhattan() < b.getBoard().manhattan())
+//                    value = -1;
+//            }
+//            
+//           return value;
+// 
+    public int compareTo(Node b) {
+            int value = 1;
+            if (getPriority() < b.getPriority()) {
+//            if (getBoard().manhattan() < b.getBoard().manhattan())
+                value = -1;
             }
+            
+            if (getPriority() == b.getPriority()) {
+                if (getBoard().manhattan() < b.getBoard().manhattan())
+                    value = -1;
+                
+            }
+            
+            
+            return value;
         }
-        
-    };
+    }
     
     /**
      * Constructior
@@ -47,16 +82,16 @@ public class Solver {
      */
     public Solver(Board initial) {
         
-        // Keep a Min-oriented priority queue for board and its twin
-        // for A* algorithm search
-        MinPQ<Node> pq;
-        MinPQ<Node> pqtwin;
+        
         Iterable<Board> iter;
         Iterable<Board> twiniter;
-        
+        MinPQ<Node> pq;
+        MinPQ<Node> pqtwin;
         boolean found = false; // set to true if either board or twin 
-        this.solvable = false;
         // reaches its goal
+        int move = 0, movetwin = 0;
+        this.solvable = false;
+        
         
         if (initial == null) 
             throw new NullPointerException("initial board is null");
@@ -92,12 +127,12 @@ public class Solver {
         //pqtwin.insert(previousTwin);
         
         // Initialize main board and remember state
-        next = new Node(initial, this.moves);
+        next = new Node(initial, move);
         pq.insert(next);
         Board previousBoard = initial;
         
         // Initialize twin board and remember state
-        nextTwin = new Node(twin, moves);
+        nextTwin = new Node(twin, movetwin);
         pqtwin.insert(nextTwin); 
         Board previousTwinBoard = twin;
         
@@ -110,8 +145,18 @@ public class Solver {
             iter = null;
             twiniter = null;
             
+
+//                for (Node n: pq) {
+//                    Board b = n.getBoard();
+//                    StdOut.println("Manhattan = " + b.manhattan());
+//                    StdOut.println("Moves = " + n.getMoves());
+//                    StdOut.println("Priority = " + n.getPriority());
+//                    StdOut.println(b);
+//                }
+
             if (!pq.isEmpty()) {
                 next = pq.delMin();
+                move = next.getMoves();
                 nextBoard = next.getBoard();
             }
             else { 
@@ -120,13 +165,18 @@ public class Solver {
                 found = true;
             }
             
-//            StdOut.println("Dequeued Board:\n" + nextBoard);
-//            StdOut.println("with Priority:" + next.getPriority());
+//                StdOut.println("Manhattan = " + nextBoard.manhattan());
+//                StdOut.println("Moves = " + next.getMoves());
+//                StdOut.println("Priority = " + next.getPriority());
+//                StdOut.println("Dequeued Board:\n" + nextBoard);
+            
             queue.enqueue(nextBoard);
             
             if (!pqtwin.isEmpty()) {
                 nextTwin = pqtwin.delMin();
+                movetwin = nextTwin.getMoves();
                 nextTwinBoard = nextTwin.getBoard();
+                
             }
             else { 
                 this.moves = -1;
@@ -134,10 +184,9 @@ public class Solver {
                 found = true;
             }
             
-            // StdOut.println("Twin Board:\n" + nextTwinBoard);
-            
             if (nextBoard.isGoal()) {
                 found = true;
+                this.moves = next.getMoves();
                 this.solvable = true;
                 
             }
@@ -149,15 +198,15 @@ public class Solver {
                 found = true;
             }
             else if (!found) {
-                moves++;
+//                    moves++;
                 // Main board operations
 //                StdOut.println("nextBoard:\n"+nextBoard);
                 
                 iter = nextBoard.neighbors();
                 for (Board b1: iter) {
-                   
+                    
                     if (!b1.equals(previousBoard)) {
-                        tmp = new Node(b1, moves);
+                        tmp = new Node(b1, move + 1);
                         pq.insert(tmp);
                     }
                 }
@@ -167,13 +216,12 @@ public class Solver {
                 // Twin board operations
                 for (Board b2:twiniter) {
                     if (!b2.equals(previousTwinBoard)) {
-                        tmpTwin = new Node(b2, moves);
+                        tmpTwin = new Node(b2, movetwin + 1);
                         pqtwin.insert(tmpTwin);
                     }
                 }
                 previousTwin = nextTwin;
-                previousTwinBoard = previousTwin.getBoard();
-                
+                previousTwinBoard = previousTwin.getBoard();      
             }
             
         } while (!found);
@@ -190,6 +238,8 @@ public class Solver {
         if (!queue.isEmpty() && this.isSolvable()) return queue;
         else return null;
     }
+    
+    
     
     // solve a slider puzzle (given below)
     public static void main(String[] args)  {

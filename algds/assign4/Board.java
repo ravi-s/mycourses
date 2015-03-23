@@ -55,6 +55,26 @@ public class Board  {
         
     }      
     
+    /**
+     * Private constructor for state copy 
+     * used in neighbors only
+     */
+    private Board(Board b) { 
+        
+        N = b.N;
+        mBlocks = new char[N * N];
+        
+        // Create the board first which is a copy of the
+        // board
+        
+        System.arraycopy(b.mBlocks, 0, mBlocks, 0, N * N);
+        
+        
+        
+        this.blankRow = b.blankRow;
+        this.blankCol = b.blankCol;
+    }
+    
     // (where blocks[i][j] = block in row i, column j)
     /**
      * board dimension N
@@ -273,20 +293,26 @@ public class Board  {
         return s.toString();
     }              
     
+//    private Board copyBoard() {
+//        Board cpy = null;
+//        int[][] blocks = new int[N][N];
+//        // Create the board first which is a copy of the
+//        // board
+//        
+//        for (int i = 0; i < N; i++)
+//            for (int j = 0; j < N; j++) {
+//            blocks[i][j] = (int) mBlocks[N * i + j];
+//        }
+//        cpy = new Board(blocks);
+//        return cpy;
+//    }
+    
+    
     private Board copyBoard() {
         Board cpy = null;
-        int[][] blocks = new int[N][N];
-        // Create the board first which is a copy of the
-        // board
-        
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < N; j++) {
-            blocks[i][j] = (int) mBlocks[N * i + j];
-        }
-        cpy = new Board(blocks);
+        cpy = new Board(this);
         return cpy;
     }
-    
     public static void main(String[] args) { 
 //         unit tests (not graded)
 //       int[][] i = {{8, 1, 3}, {4, 0, 2}, {7, 6, 5}};
@@ -324,8 +350,10 @@ public class Board  {
 //        
 //        int icopy[][] = {{8, 1, 3}, {4, 0, 2}, {7, 6, 5}};
         //int i[][] = {{4,0,2},{7,6,5},{8,1,3}};
-//        int[][] j = {{0, 1, 3}, {4, 2, 5}, {7, 8, 6}};
+//        int[][] j = {{1, 2, 3}, {0, 7, 6}, {5, 4, 8}};
         int[][] j = {{1, 0, 2}, {7, 5, 4}, {8, 6, 3}};
+//        int[][] j = {{1, 2, 4}, {0, 5, 3}, {7, 8, 6}};
+//        int[][] j = {{1, 5, 2}, {7, 0, 4}, {8, 6, 3}};
         //int k[][] = {{1,3,0},{4,2,5},{7,8,6}};
         //int l[][] = {{4,2,5},{7,8,6},{1,3,0}};
         //int[][] m = {{1, 2, 3}, {5, 7, 6}, {0, 4, 8}};
@@ -354,9 +382,9 @@ public class Board  {
         
         for (Board obj: iter) {
             q.enqueue(obj);
-            StdOut.println(obj); 
-            StdOut.println("Hamming score:" + b.hamming());
-            StdOut.println("Manhattan score:" + b.manhattan());
+//            StdOut.println(obj); 
+//            StdOut.println("Hamming score:" + obj.hamming());
+//            StdOut.println("Manhattan score:" + obj.manhattan());
 //            StdOut.println("Hamming score:" + obj.hamming());
 //            StdOut.println("Manhattan score:" + obj.manhattan());
         }
@@ -364,15 +392,15 @@ public class Board  {
         for (Board obj: q) {
             StdOut.println("Board:");
             StdOut.println(obj);
-            StdOut.println("Hamming score:" + b.hamming());
-            StdOut.println("Manhattan score:" + b.manhattan());
-            StdOut.println("Neighbors:\n--------");
-            iter = obj.neighbors();
-            for (Board obj1: iter)  {
-                StdOut.println(obj1);
-                StdOut.println("Hamming score:" + b.hamming());
-                StdOut.println("Manhattan score:" + b.manhattan());
-            }
+            StdOut.println("Hamming score:" + obj.hamming());
+            StdOut.println("Manhattan score:" + obj.manhattan());
+//            StdOut.println("Neighbors:\n--------");
+//            iter = obj.neighbors();
+//            for (Board obj1: iter)  {
+//                StdOut.println(obj1);
+//                StdOut.println("Hamming score:" + obj1.hamming());
+//                StdOut.println("Manhattan score:" + obj1.manhattan());
+//            }
         }
 //        if (b.isGoal()) StdOut.println("This is goal board!!!");
 //        StdOut.println("Twin:\n" + b.twin());
