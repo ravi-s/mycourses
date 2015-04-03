@@ -245,7 +245,6 @@ public class KdTree {
         double d = Double.MAX_VALUE, 
             min = Double.MAX_VALUE;
         
-        
         Point2D pt = null;
         
         if (isEmpty()) 
@@ -253,30 +252,39 @@ public class KdTree {
         // Start with Root
         Node temp = this.root;
         
-        
-        if (isPointWithinNodeRect(temp, p)) {  
-            d = getSquaredistances(temp, p);
-            min = d; 
-        }
+//        if (isPointWithinNodeRect(temp, p)) {  
+        d = getSquaredistances(temp, p);
+        min = d; 
+        pt = temp.getPoint();
         if (temp.right != null) 
             stack.push(temp.right);
         if (temp.left != null)
             stack.push(temp.left);
+        if (temp.left == null && temp.right == null) {
+            
+            return pt;
+        }
+//        }
         
         while (!stack.isEmpty()) {
             temp = stack.pop();
-            if (isPointWithinNodeRect(temp, p)) {
+//            if (isPointWithinNodeRect(temp, p)) {
+            
+            RectHV r = temp.getRect();
+            double rdist = r.distanceSquaredTo(p);
+            if (rdist < min) {
                 d = getSquaredistances(temp, p);
-                
                 if (d < min) {
                     min = d;
                     pt = temp.getPoint();
-                    if (temp.right != null) 
-                        stack.push(temp.right);
-                    if (temp.left != null)
-                        stack.push(temp.left);  
                 }
+                if (temp.right != null) 
+                    stack.push(temp.right);
+                if (temp.left != null)
+                    stack.push(temp.left);
             }
+            
+//            }
             
         }
         
@@ -323,7 +331,7 @@ public class KdTree {
             throw new NullPointerException("Node null in isPointWithinNodeRect()");
         
         RectHV rect = n.getRect();
-        return (rect.distanceSquaredTo(p) == 0); 
+        return rect.contains(p); 
     }
     
     /**
@@ -334,7 +342,7 @@ public class KdTree {
         double sqrdist;
         
         Point2D pt = n.getPoint();
-        sqrdist = pt.distanceSquaredTo(p);
+        sqrdist = p.distanceSquaredTo(pt);
         return sqrdist;
     }
     
@@ -390,8 +398,8 @@ public class KdTree {
         
         //Simple test case 1
         tree = new KdTree();
-        p = new Point2D(0.7, 0.2);
-        tree.insert(p);
+//        p = new Point2D(0.7, 0.2);
+//        tree.insert(p);
         
 //        if (tree.isEmpty()) StdOut.println("tree is empty");
 //        tree.insert(p);
@@ -400,16 +408,26 @@ public class KdTree {
 //            StdOut.println("Tree contains the point:" + p);
         
         // Test case 2
-        p = new Point2D(0.5, 0.4);
+//        p = new Point2D(0.5, 0.4);
+//        tree.insert(p);
+//        p = new Point2D(0.2, 0.3);
+//        tree.insert(p);
+//        p = new Point2D(0.4, 0.7);
+//        tree.insert(p);    
+//        p = new Point2D(0.9, 0.6);
+//        tree.insert(p);
+//        // Check duplicate insert
+//        tree.insert(p);
+        
+        p = new Point2D(0.821653, 0.300758);
         tree.insert(p);
-        p = new Point2D(0.2, 0.3);
+        p = new Point2D(0.0, 0.0);
         tree.insert(p);
-        p = new Point2D(0.4, 0.7);
+        p = new Point2D(0.069324, 0.275381);
+        tree.insert(p);
+        p = new Point2D(1.0, 1.0);
         tree.insert(p);    
-        p = new Point2D(0.9, 0.6);
-        tree.insert(p);
-        // Check duplicate insert
-        tree.insert(p);
+        
 //        
 //        StdOut.println("Number of elements in the tree: " + tree.size());
 //        p = new Point2D(0.4, 0.7);
@@ -439,27 +457,61 @@ public class KdTree {
 //            StdOut.println(pt);
         
         // Test case 4 : Check nearest point to the given point
-        Point2D queryPoint = new Point2D(0.1, 0.2);
-        
+//        Point2D queryPoint = new Point2D(0.1, 0.2);
+//        
+//        Point2D nearest = tree.nearest(queryPoint);
+//        if (null != nearest) {
+//            StdOut.println("querypoint: " + queryPoint);
+//            StdOut.println("Nearest Point: " + nearest);   
+//        }
+//        queryPoint = new Point2D(0.2, 0.2);
+//        nearest = tree.nearest(queryPoint);
+//        if (null != nearest) {
+//            StdOut.println("querypoint: " + queryPoint);
+//            StdOut.println("Nearest Point: " + nearest);   
+//        }
+//        queryPoint = new Point2D(0.8, 0.4);
+//        nearest = tree.nearest(queryPoint);
+//        if (null != nearest) {
+//            StdOut.println("querypoint: " + queryPoint);
+//            StdOut.println("Nearest Point: " + nearest);   
+//        }
+//        
+//        queryPoint = new Point2D(0.15, 0.6);
+//        nearest = tree.nearest(queryPoint);
+//        if (null != nearest) {
+//            StdOut.println("querypoint: " + queryPoint);
+//            StdOut.println("Nearest Point: " + nearest);   
+//        }
+//        
+        Point2D queryPoint = new Point2D(0.412109375, 0.564453125);
         Point2D nearest = tree.nearest(queryPoint);
         if (null != nearest) {
             StdOut.println("querypoint: " + queryPoint);
             StdOut.println("Nearest Point: " + nearest);   
         }
-        queryPoint = new Point2D(0.2, 0.2);
-        nearest = tree.nearest(queryPoint);
-        if (null != nearest) {
-            StdOut.println("querypoint: " + queryPoint);
-            StdOut.println("Nearest Point: " + nearest);   
-        }
-        queryPoint = new Point2D(0.8, 0.4);
+        
+        queryPoint = new Point2D(0.3359375, 0.62890625);
         nearest = tree.nearest(queryPoint);
         if (null != nearest) {
             StdOut.println("querypoint: " + queryPoint);
             StdOut.println("Nearest Point: " + nearest);   
         }
         
-        queryPoint = new Point2D(0.15, 0.6);
+        queryPoint = new Point2D(0.50390625, 0.841796875);
+        nearest = tree.nearest(queryPoint);
+        if (null != nearest) {
+            StdOut.println("querypoint: " + queryPoint);
+            StdOut.println("Nearest Point: " + nearest);   
+        }
+        queryPoint = new Point2D(0.681640625, 0.802734375);
+        nearest = tree.nearest(queryPoint);
+        if (null != nearest) {
+            StdOut.println("querypoint: " + queryPoint);
+            StdOut.println("Nearest Point: " + nearest);   
+        }
+        
+        queryPoint = new Point2D(0.357421875, 0.359375);
         nearest = tree.nearest(queryPoint);
         if (null != nearest) {
             StdOut.println("querypoint: " + queryPoint);

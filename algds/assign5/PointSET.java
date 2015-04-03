@@ -151,46 +151,91 @@ public class PointSET {
 //            StdOut.println(p);
         
         PointSET pointset = new PointSET();
-        Point2D p = new Point2D(0.7, 0.2);
+//        Point2D p = new Point2D(0.7, 0.2);
+//        pointset.insert(p);
+//        p = new Point2D(0.5, 0.4);
+//        pointset.insert(p);
+//        p = new Point2D(0.2, 0.3);
+//        pointset.insert(p);
+//        p = new Point2D(0.4, 0.7);
+//        pointset.insert(p);    
+//        p = new Point2D(0.9, 0.6);
+//        pointset.insert(p);
+        
+        Point2D p = new Point2D(0.821653, 0.300758);
         pointset.insert(p);
-        p = new Point2D(0.5, 0.4);
+        p = new Point2D(0.0, 0.0);
         pointset.insert(p);
-        p = new Point2D(0.2, 0.3);
+        p = new Point2D(0.069324, 0.275381);
         pointset.insert(p);
-        p = new Point2D(0.4, 0.7);
+        p = new Point2D(1.0, 1.0);
         pointset.insert(p);    
-        p = new Point2D(0.9, 0.6);
-        pointset.insert(p);
+        
         /*
          * Test case for nearest method
          * 
          */
-        Point2D queryPoint = new Point2D(0.1, 0.2);
+//        Point2D queryPoint = new Point2D(0.1, 0.2);
+//        
+//        Point2D nearest = pointset.nearest(queryPoint);
+//        if (null != nearest) {
+//            StdOut.println("querypoint: " + queryPoint);
+//            StdOut.println("Nearest Point: " + nearest);   
+//        }
+//        queryPoint = new Point2D(0.2, 0.2);
+//        nearest = pointset.nearest(queryPoint);
+//        if (null != nearest) {
+//            StdOut.println("querypoint: " + queryPoint);
+//            StdOut.println("Nearest Point: " + nearest);   
+//        }
+//        queryPoint = new Point2D(0.8, 0.4);
+//        nearest = pointset.nearest(queryPoint);
+//        if (null != nearest) {
+//            StdOut.println("querypoint: " + queryPoint);
+//            StdOut.println("Nearest Point: " + nearest);   
+//        }
+//        
+//        queryPoint = new Point2D(0.15, 0.6);
+//        nearest = pointset.nearest(queryPoint);
+//        if (null != nearest) {
+//            StdOut.println("querypoint: " + queryPoint);
+//            StdOut.println("Nearest Point: " + nearest);   
+//        }
         
-        Point2D nearest = pointset.nearest(queryPoint);
+       Point2D queryPoint = new Point2D(0.412109375, 0.564453125);
+       Point2D nearest = pointset.nearest(queryPoint);
         if (null != nearest) {
             StdOut.println("querypoint: " + queryPoint);
             StdOut.println("Nearest Point: " + nearest);   
         }
-        queryPoint = new Point2D(0.2, 0.2);
-        nearest = pointset.nearest(queryPoint);
-        if (null != nearest) {
-            StdOut.println("querypoint: " + queryPoint);
-            StdOut.println("Nearest Point: " + nearest);   
-        }
-        queryPoint = new Point2D(0.8, 0.4);
+        
+        queryPoint = new Point2D(0.3359375, 0.62890625);
         nearest = pointset.nearest(queryPoint);
         if (null != nearest) {
             StdOut.println("querypoint: " + queryPoint);
             StdOut.println("Nearest Point: " + nearest);   
         }
         
-        queryPoint = new Point2D(0.15, 0.6);
+        queryPoint = new Point2D(0.50390625, 0.841796875);
         nearest = pointset.nearest(queryPoint);
         if (null != nearest) {
             StdOut.println("querypoint: " + queryPoint);
             StdOut.println("Nearest Point: " + nearest);   
         }
+        
+        queryPoint = new Point2D(0.681640625, 0.802734375);
+        nearest = pointset.nearest(queryPoint);
+        if (null != nearest) {
+            StdOut.println("querypoint: " + queryPoint);
+            StdOut.println("Nearest Point: " + nearest);   
+        }
+        queryPoint = new Point2D(0.357421875, 0.359375);
+        nearest = pointset.nearest(queryPoint);
+        if (null != nearest) {
+            StdOut.println("querypoint: " + queryPoint);
+            StdOut.println("Nearest Point: " + nearest);   
+        }
+        
 //         String filename = args[0];
 //        In in = new In(filename);
 //        Point2D p;
