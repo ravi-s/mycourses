@@ -73,7 +73,7 @@ public class Deque<Item> implements Iterable<Item> {
         front = new Node();
         front.item = item;
         front.next = oldFront;
-        //front.previous = null;
+        // front.previous = null;
         if (oldFront != null) {
             oldFront.previous = front;
         }
@@ -203,17 +203,17 @@ public class Deque<Item> implements Iterable<Item> {
                 break;
 
             case 1:
-                /*if (front == null || back == null) {
+                /* if (front == null || back == null) {
                     //StdOut.println("front or back is null");
                     test = false;
-                }*/
+                } */
                 test = front != null;
                 break;
             default:
                 test = front.next != null && back.previous != null;
                 break;
         }
-        /*if (N == 0) {
+        /* if (N == 0) {
             //StdOut.println("when N is 0"+ N);
             return front == null || back == null;
         } else if (N == 1) {
@@ -222,12 +222,12 @@ public class Deque<Item> implements Iterable<Item> {
                 //StdOut.println("front or back is null");
                 return false;
             }
-            *//*front.next != null || back.next != null*//*
+           front.next != null || back.next != null
             //StdOut.println("front or back is not null");
             return front == back;
         } else {
             return front.next != null && back.previous != null;
-        }*/
+        } */
         return test;
     }
 
@@ -343,56 +343,22 @@ public class Deque<Item> implements Iterable<Item> {
         // Test corner cases
         // call with null values
         StdOut.println("Executing Test case 5 for corner cases");
-        try {
-            dq.addFirst(null);
-        } catch (RuntimeException e) {
-            StdOut.println("Exception caught: " + e.toString());
-            StdOut.println("null check on addFirst() passed");
-        }
 
-        try {
-            dq.addLast(null);
-        } catch (RuntimeException e) {
-            StdOut.println("Exception caught: " + e.toString());
-            StdOut.println("null check on addLast() passed");
-        }
+        dq.addFirst(null);
+        dq.addLast(null);
 
         assert dq.isEmpty();
-        try {
-            dq.removeFirst();
-        } catch (RuntimeException e) {
-            StdOut.println("Exception caught: " + e.toString());
-            StdOut.println("empty check on removeFirst() passed");
-        }
-
-        try {
-            dq.removeFirst();
-        } catch (RuntimeException e) {
-            StdOut.println("Exception caught: " + e.toString());
-            StdOut.println("empty check on removeLast() passed");
-        }
+        dq.removeFirst();
+        dq.removeFirst();
 
         assert dq.isEmpty();
-        try {
-            Iterator<Integer> iterator = dq.iterator();
-            StdOut.println(iterator.next());
-        }
-        catch (RuntimeException e) {
-            StdOut.println("Exception caught: " + e.toString());
-            StdOut.println("Iterator test on empty deque passed. Threw NoSuchElementException object. ");
-        }
-
+        Iterator<Integer> iterator = dq.iterator();
         for (int i = 1; i <= itemCount; i++) {
             dq.addFirst(i);
         }
-        try {
-            Iterator<Integer> iterator = dq.iterator();
-            iterator.remove();
-        }
-        catch (RuntimeException e) {
-            StdOut.println("Exception caught: " + e.toString());
-            StdOut.println("Iterator remove() method test passed. Threw UnsupportedOperationException object. ");
-        }
+        iterator = dq.iterator();
+        iterator.remove();
+
 
         /*// Test case 3: Test non-Empty to Empty to Non-Empty
         assert dq.isEmpty();

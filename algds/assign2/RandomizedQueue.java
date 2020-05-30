@@ -38,8 +38,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 // cast needed since no generic array creation in Java
         queue = (Item[]) new Object[1];
 
-        // Set random number seed
-        StdRandom.setSeed(System.currentTimeMillis());
+        /* // Set random number seed
+        StdRandom.setSeed(System.currentTimeMillis()); */
     }
 
     /**
@@ -68,19 +68,27 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      * @throws IllegalArgumentException if item is null
      */
     public void enqueue(Item item) {
+
         if (item == null) {
             throw new IllegalArgumentException("item is a null object");
         }
-
         // double size of array if necessary and recopy to front of array
         if (items == queue.length) {
             resize(2 * queue.length);
         } // double size of array if necessary
+
         queue[last++] = item;     // add item
         if (last == queue.length) {
             last = 0;
         }       // wrap-around
         items++;
+        // Randomly swap between first and last elements using shuffling
+        if (last > first) {
+            Item swap = queue[first]; // Swapped out
+            int index = StdRandom.uniform(first, last);
+            queue[first] = queue[index];
+            queue[index] = swap;
+        }
     }
 
     /**
@@ -94,15 +102,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new NoSuchElementException("Queue underflow");
         }
 
-        int idx = randomIndex();
+        /* int idx = randomIndex();
         // Swap random element at idx with first
         Item swap = queue[first];
         queue[first] = queue[idx];
         queue[idx] = swap;
 
         // Deque the random element, now in index pointed by first
+        */
         Item item = queue[first];
         queue[first] = null; // to avoid loitering
+
         items--;
         first++;
 
@@ -171,7 +181,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            //Item item = q[(i + first) % q.length];
+            // Item item = q[(i + first) % q.length];
             Item item = iterq.dequeue();
             i++;
             return item;
@@ -195,19 +205,21 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     /**
      * Get a random index for the queue data structure.
      */
-    private int randomIndex() {
+      private  int randomIndex() {
+        int idx;
         // Using the uniform random generator API, get a random index
         if (items == 1) {
             return 0;
         }
-        return StdRandom.uniform(first, (first + (items - 1)) % queue.length);
+        // return StdRandom.uniform(first, (first + items - 1) % queue.length);
+        idx = StdRandom.uniform(first, first + items - 1);
+        return idx;
     }
 
     /**
      * Unit tests the <tt>RandomizeQueue</tt> data type.
      */
     public static void main(String[] args) {
-
         RandomizedQueue<Integer> queue = new RandomizedQueue<>();
         int itemCount = 25;
 
@@ -215,7 +227,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
          * Test case 1: Check randomized queue basic operations
          */
         StdOut.println("Test case 1: Enqueue N items and check iterator");
-        for (int i = 0; i <= itemCount; i++) {
+        for (int i = 1; i <= itemCount; i++) {
             queue.enqueue(i);
         }
         assert queue.size() == itemCount;
@@ -229,6 +241,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         for (Number item : queue) {
             StdOut.print(item + " ");
         }
+        StdOut.println();
         StdOut.println("Randomized Queue iterator test passed!");
 
         /*
@@ -247,16 +260,30 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
          * Test case 4: Check Randomized queue dequeue() test
          * dequeue 10 random elements. Ensure size is correct after this operation
          */
-
+        StdOut.println("Testing 10 random dequeue() method calls");
         for (int i = 1; i <= 10; i++) {
             StdOut.print(queue.dequeue() + " ");
         }
         StdOut.println();
         assert queue.size() == 15;
+        for (Number item : queue) {
+            StdOut.print(item + " ");
+        }
+        StdOut.println();
+        StdOut.println("Iterator operation after random dequeue");
 
+        /*
+         * Test case 5: corner cases
+         *
+         */
+//        queue.enqueue(1);
+//
+//        StdOut.println(queue.dequeue());
+//        queue.enqueue(2);
+//        StdOut.println(queue.dequeue());
 
         // Check if iterator can be mutually nested
-        /*for (Number item1 : queue) {
+        /* for (Number item1 : queue) {
             StdOut.println(item1);
             StdOut.println("----");
             for (Number item2 : queue) {
@@ -272,7 +299,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println();*/
 
 
-        /*queue.enqueue(null);
+        /* queue.enqueue(null);
 
         queue.dequeue();*/
     }
